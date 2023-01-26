@@ -64,25 +64,57 @@ def num(dt):
     
     return t, m, p
 
+def q5(md, ms, pd, ps):
+    t0, tEnd, dt = 0, 100, 0.1
+    n = int((tEnd-t0)/dt)
+    t = np.arange(0, 100, dt)
+    m = np.zeros(n)
+    p = np.zeros(n)
+
+    for i in range (0, len(t)-1):
+        m[i+1] = m[i] + dt * (ms* kr - m[i]*(md* yr + u))
+        p[i+1] = p[i] + dt * (ps* kp * m[i] - p[i] * (pd * yp + u))
+    
+    return t, m, p
+
 fig = plt.figure(num=1, clear=True)
 ax = fig.add_subplot(1,1,1)
-ax.plot(t, num(0.1)[2], '-g', label = "dt = 0.1")
+ax.plot(t, num(0.1)[2], '-g', linestyle = 'dashed', label = "dt = 0.1")
 ax.plot(num(5)[0], num(5)[2], '-b', label = "dt = 5")
 ax.plot(num(10)[0], num(10)[2], '-r', label = "dt = 10")
-ax.plot(t, analytic()[1], label = 'Analytic')
+ax.plot(t, analytic()[1], linestyle = 'dotted', color = 'red', label = 'Analytic')
 # ax.plot(t5, p2, label = "dt = 5")
 # ax.plot(t10, p3, label = "dt = 10")
-ax.set(xlabel = 'time (hours)', ylabel = 'Proteins (molecule count)', title = 'Comparison of Analytical and Numerical')
+ax.set(xlabel = 'time (hours)', ylabel = 'Proteins (molecule/uM^3)', title = 'Comparison of Analytical and Numerical')
 ax.grid(True), fig.tight_layout(), ax.legend()
 
 # Testing out Different [mRNA] for [P]ss
-fig = plt.figure(num = 2, clear = True)
+# fig = plt.figure(num = 2, clear = True)
+# ax = fig.add_subplot(1, 1, 1)
+# ax.plot(t, analytic()[0], '-b', label = 'Analyltic mRNA')
+# ax.plot(t, analytic()[1], '-r', label = 'mRNA_ss constants')
+# ax.plot(t, num(0.1)[2], '--g', label = 'dt = 0.1')
+# ax.set(xlabel = 'time (hours)', ylabel = 'Proteins (molecule/uM^3)', title = 'Comparison of Analytical and Numerical')
+# ax.grid(True), fig.tight_layout(), ax.legend()
+
+fig = plt.figure(num = 3, clear = True)
 ax = fig.add_subplot(1, 1, 1)
-ax.plot(t, analytic()[0], '-b', label = 'Analyltic mRNA')
-ax.plot(t, analytic()[1], '-r', label = 'mRNA_ss constants')
-ax.plot(t, num(0.1)[2], '--g', label = 'dt = 0.1')
-ax.set(xlabel = 'time (hours)', ylabel = 'Proteins (molecule count)', title = 'Comparison of Analytical and Numerical')
+ax.plot(t, q5(1, 1, 1, 1)[1], linestyle = 'solid', label = 'mRNA Base Case')
+ax.plot(t, q5(2, 1, 1, 1)[1], label = 'Double mRNA degradation')
+ax.plot(t, q5(1, 2, 1, 1)[1], label = 'Double mRNA synthesis')
+ax.plot(t, q5(1, 1, 2, 1)[1], linestyle = 'dashed', label = 'Double protein degradation')
+ax.plot(t, q5(1, 1, 1, 2)[1], linestyle = 'dotted', label = 'Double protein synthesis')
+ax.set(xlabel = 'time (hours)', ylabel = 'mRNA (molecule/uM^3)', title = '[mRNA] under Different Conditions')
+ax.grid(True), fig.tight_layout(), ax.legend()
+
+fig = plt.figure(num = 4, clear = True)
+ax = fig.add_subplot(1, 1, 1)
+ax.plot(t, q5(1, 1, 1, 1)[2], label = 'mRNA Base Case')
+ax.plot(t, q5(2, 1, 1, 1)[2], linestyle = 'dashed', label = 'Double mRNA degradation')
+ax.plot(t, q5(1, 2, 1, 1)[2], label = 'Double mRNA synthesis')
+ax.plot(t, q5(1, 1, 2, 1)[2], label = 'Double protein degradation')
+ax.plot(t, q5(1, 1, 1, 2)[2], linestyle = 'dotted', label = 'Double protein synthesis')
+ax.set(xlabel = 'time (hours)', ylabel = 'protein (molecule/uM^3)', title = '[protein] under Different Conditions')
 ax.grid(True), fig.tight_layout(), ax.legend()
 
 plt.show()
-
