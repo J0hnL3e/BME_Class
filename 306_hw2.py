@@ -85,7 +85,7 @@ ax.plot(num(10)[0], num(10)[2], '-r', label = "dt = 10")
 ax.plot(t, analytic()[1], linestyle = 'dotted', color = 'red', label = 'Analytic')
 # ax.plot(t5, p2, label = "dt = 5")
 # ax.plot(t10, p3, label = "dt = 10")
-ax.set(xlabel = 'time (hours)', ylabel = 'Proteins (molecule/uM^3)', title = 'Comparison of Analytical and Numerical')
+ax.set(xlabel = 'time (hours)', ylabel = 'Protein Conc. (molecule/uM^3)', title = 'Protein Conc. Approximations')
 ax.grid(True), fig.tight_layout(), ax.legend()
 
 # Testing out Different [mRNA] for [P]ss
@@ -104,7 +104,7 @@ ax.plot(t, q5(2, 1, 1, 1)[1], label = 'Double mRNA degradation')
 ax.plot(t, q5(1, 2, 1, 1)[1], label = 'Double mRNA synthesis')
 ax.plot(t, q5(1, 1, 2, 1)[1], linestyle = 'dashed', label = 'Double protein degradation')
 ax.plot(t, q5(1, 1, 1, 2)[1], linestyle = 'dotted', label = 'Double protein synthesis')
-ax.set(xlabel = 'time (hours)', ylabel = 'mRNA (molecule/uM^3)', title = '[mRNA] under Different Conditions')
+ax.set(xlabel = 'time (hours)', ylabel = 'mRNA Concentration (molecule/uM^3)', title = '[mRNA] under Different Conditions')
 ax.grid(True), fig.tight_layout(), ax.legend()
 
 fig = plt.figure(num = 4, clear = True)
@@ -114,7 +114,7 @@ ax.plot(t, q5(2, 1, 1, 1)[2], linestyle = 'dashed', label = 'Double mRNA degrada
 ax.plot(t, q5(1, 2, 1, 1)[2], label = 'Double mRNA synthesis')
 ax.plot(t, q5(1, 1, 2, 1)[2], label = 'Double protein degradation')
 ax.plot(t, q5(1, 1, 1, 2)[2], linestyle = 'dotted', label = 'Double protein synthesis')
-ax.set(xlabel = 'time (hours)', ylabel = 'protein (molecule/uM^3)', title = '[protein] under Different Conditions')
+ax.set(xlabel = 'time (hours)', ylabel = 'Protein Concentration (molecule/uM^3)', title = '[Protein] under Different Conditions')
 ax.grid(True), fig.tight_layout(), ax.legend()
 
 plt.show()
