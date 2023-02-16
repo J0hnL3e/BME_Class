@@ -28,11 +28,13 @@ d, d2, d3, d4 = np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n)
 total, total2, total3, total4 = np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n)
 N = 1e4  # cells
 vc = 4.18*1e-6
+
 p[0], d[0], csc[0] = (0.1991 * N), (0.7991 * N), (0.0018 * N)
 p2[0], d2[0], csc2[0] = (0.1991 * N), (0.7991 * N), (0.0018 * N)
 p3[0], d3[0], csc3[0] = (0.1991 * N), (0.7991 * N), (0.0018 * N)
 p4[0], d4[0], csc4[0] = (0.1991 * N), (0.7991 * N), (0.0018 * N)
 total[0], total2[0], total3[0], total4[0] = p[0] + d[0] + csc[0], p[0] + d[0] + csc[0], p[0] + d[0] + csc[0], p[0] + d[0] + csc[0]
+
 
 for i in range(0, len(t)-1):
     if (t[i] == 120):

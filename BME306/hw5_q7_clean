@@ -1,0 +1,76 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# defining given constants
+k1 = 0.143  # day^-1
+k2 = 1      # day^-1
+k3 = 0.01   # day^-1
+k4 = 5.35   # day^-1
+k5 = 30     # day^-1
+k6 = 0.01   # day^-1
+k7 = 0.1    # day^-1
+k8 = 1      # day^-1
+N = 1e4  # cells
+vc = 4.18*1e-6
+
+t0 = 0
+tEnd = 200  # day
+dt = 0.01
+t = np.arange(t0, tEnd, 0.01)
+n = int((tEnd - t0)/dt)
+
+def tummy(nontarget, k1coeff):
+    p, d, csc, total = np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n)
+    p[0], d[0], csc[0] = (0.1991 * N), (0.7991 * N), (0.0018 * N)
+    total[0] = p[0] + d[0] + csc[0]
+    for i in range(0, len(t)-1):
+        if (k1coeff > 0 and t[i] >= 120): 
+            p[i+1] = p[i] + dt * (csc[i] * (k2 + 2*k3) + p[i] * (k4-k5-k8))
+            d[i+1] = d[i] + dt * (2*k5*p[i]-k7*d[i])
+            csc[i+1] = csc[i] + dt * (csc[i]*(k1coeff*k1-k3-k6))
+            total[i+1] = p[i+1] + d[i+1] + csc[i+1]
+        
+        elif (nontarget > 0 and t[i] == 120):
+            p[i+1] = nontarget * p[i]
+            d[i+1] = nontarget * d[i]
+            csc[i+1] = nontarget * csc[i]
+            total[i+1] = p[i+1] + d[i+1] + csc[i+1]
+        
+        else:
+            p[i+1] = p[i] + dt * (csc[i] * (k2 + 2*k3) + p[i] * (k4-k5-k8))
+            d[i+1] = d[i] + dt * (2*k5*p[i]-k7*d[i])
+            csc[i+1] = csc[i] + dt * (csc[i]*(k1-k3-k6))
+            total[i+1] = p[i+1] + d[i+1] + csc[i+1]        
+
+    res = [vc * i for i in total]
+
+    return res
+
+# plotting 
+fig = plt.figure(num = 1, clear = True)
+ax = fig.add_subplot(1, 1, 1)
+ax.plot(t, tummy(0, 0), label = 'Tumor')
+ax.set(xlabel = 'time (days)', ylabel = 'Tumor Volume (mm^3)')
+ax.grid(True), fig.tight_layout(), ax.legend()
+plt.xlim([50, 150]), plt.ylim([0, 1400])
+
+fig = plt.figure(num = 2, clear = True)
+ax = fig.add_subplot(1, 1, 1)
+ax.plot(t, tummy(0, 0), label = 'Tumor, no non-target chemo')
+ax.plot(t, tummy(0.1, 0), label = 'Tumor, 90% non-target chemo')
+ax.plot(t, tummy(0.01, 0), label = 'Tumor, 99% non-target chemo')
+ax.plot(t, tummy(0.001, 0), label = 'Tumor, 99.9% non-target chemo')
+ax.set(xlabel = 'time (days)', ylabel = 'Tumor Volume (mm^3)')
+ax.grid(True), fig.tight_layout(), ax.legend()
+plt.ylim([0, 6000])
+
+fig = plt.figure(num = 3, clear = True)
+ax = fig.add_subplot(1, 1, 1)
+ax.plot(t, tummy(0, 0.2), label = 'Tumor, k1 80% reduction')
+ax.plot(t, tummy(0, 0.15), label = 'Tumor, k1 85% reduction')
+ax.plot(t, tummy(0, 0.1), label = 'Tumor, k1 90% reduction')
+ax.plot(t, tummy(0.001, 0), label = 'Tumor, 99.9% non-target chemo')
+ax.set(xlabel = 'time (days)', ylabel = 'Tumor Volume (mm^3)')
+ax.grid(True), fig.tight_layout(), ax.legend()
+plt.ylim([0, 9000])
+plt.show()
